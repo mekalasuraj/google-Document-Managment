@@ -19,20 +19,10 @@ class HomeApp extends React.Component {
     componentDidMount() {
     let self = this.state;
     axios.get('/api/getAllFiles')
-    .then(allFilesDataList => {
-        let downloadLinkRequests = [];
-        allFilesDataList.data.forEach(fileItem => {
-            if(!fileItem.directory){
-            downloadLinkRequests.push(axios.get(`/api/downloadFile/${fileItem.id}`));
-            }
-        });
-        axios.all(downloadLinkRequests)
-        .then(axios.spread((...spreadResponse) => {
-            self.data = allFilesDataList.data;
-            self.isInitialStateLoaded = true;
-            self.fileLinks = spreadResponse;
-            this.setState(self);
-        }));
+    .then(response => {
+        self.data = response.data;
+        self.isInitialStateLoaded = true;
+        this.setState(self);
     });
     }
 
@@ -144,14 +134,6 @@ class HomeApp extends React.Component {
                     </div>
                     <div className="col-6">
                     <div style={{paddingTop:25}}>
-                    {/* {
-                        this.state.fileLinks.map((fileId,j)=>(
-                        i===j &&
-                        <a href={fileId.data.cloudElementsLink} key={j} download>
-                        <button type="button" className="btn btn-success">Download</button>
-                        </a>
-                        ))
-                    } */}
                      </div>
                      <div style={{paddingTop:10}}>
                      {

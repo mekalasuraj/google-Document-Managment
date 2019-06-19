@@ -16,37 +16,16 @@ class FolderInnerApp extends React.Component {
         }
     }
 
-    // componentDidMount(){
-    //     let self = this.state;
-    //     let folderId = window.location.href.split('/')[4];
-    //     axios.get(`/api/getAllFilesByFolderId/${folderId}`)
-    //     .then(response=>{
-    //         self.folderData = response.data;
-    //         self.isInitialStateLoaded = true;
-    //         this.setState(self);
-    //     })
-    // }
-
-    componentDidMount() {
+    componentDidMount(){
         let self = this.state;
         let folderId = window.location.href.split('/')[4];
         axios.get(`/api/getAllFilesByFolderId/${folderId}`)
-        .then(allFilesDataList => {
-            let downloadLinkRequests = [];
-            allFilesDataList.data.forEach(fileItem => {
-                if(!fileItem.directory){
-                downloadLinkRequests.push(axios.get(`/api/downloadFile/${fileItem.id}`));
-                }
-            });
-            axios.all(downloadLinkRequests)
-            .then(axios.spread((...spreadResponse) => {
-                self.folderData = allFilesDataList.data;
-                self.isInitialStateLoaded = true;
-                self.fileLinks = spreadResponse;
-                this.setState(self);
-            }));
-        });
-        }
+        .then(response=>{
+            self.folderData = response.data;
+            self.isInitialStateLoaded = true;
+            this.setState(self);
+        })
+    }
 
     fileChangedHandler = (e) => {
         this.setState({selectedFile:e.target.files[0]});
